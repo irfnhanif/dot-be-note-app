@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './models/user.model';
-import { createUserDto } from './dto/create-user.dto';
-
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -12,15 +9,11 @@ export class UsersService {
     private userModel: typeof User,
   ) {}
 
-  create(createUserDto: createUserDto): Promise<User> {
-    const saltOrRounds = 10
-    const salt = bcrypt.genSaltSync(saltOrRounds)
-    const hashedPassword = bcrypt.hashSync(createUserDto.password, salt)
-
+  create(username: string, password: string, email: string): Promise<User> {
     return this.userModel.create({
-      username: createUserDto.username,
-      password: hashedPassword,
-      email: createUserDto.email,
+      username: username,
+      password: password,
+      email: email,
     });
   }
 
