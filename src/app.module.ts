@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotesModule } from './notes/notes.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { Note } from './notes/models/note.model';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       username: 'root',
       password: '',
       database: 'dot_be_note_app_db',
-      models: [],
+      models: [Note],
     }),
     NotesModule,
   ],
