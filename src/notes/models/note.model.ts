@@ -12,8 +12,8 @@ export class Note extends Model {
   authorId: string;
 
   @Column
-  createdAt?: any;
+  createdAt?: Date;
 
   @Column
-  updatedAt?: any;
+  updatedAt?: Date;
 }
