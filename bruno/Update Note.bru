@@ -1,0 +1,18 @@
+meta {
+  name: Update Note
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/notes/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "dod",
+    "content": "123"
+  }
+}

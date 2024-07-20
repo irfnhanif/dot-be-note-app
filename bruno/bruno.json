@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "dot-be-note-app",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
