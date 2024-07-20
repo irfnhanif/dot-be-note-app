@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  HttpCode,
+  NotFoundException,
+} from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
@@ -9,6 +19,7 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Post()
+  @HttpCode(201)
   create(@Body() createNoteDto: CreateNoteDto): Promise<Note> {
     createNoteDto.createdAt = createNoteDto.createdAt || new Date();
     createNoteDto.updatedAt = createNoteDto.updatedAt || new Date();
@@ -17,22 +28,44 @@ export class NotesController {
 
   @Get()
   findAll(): Promise<Note[]> {
-    return this.notesService.findAll();
+    const notes = this.notesService.findAll();
+    
+    return notes;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Note> {
-    return this.notesService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Note> {
+    const note = await this.notesService.findOne(+id);
+    if (!note) {
+      throw new NotFoundException();
+    }
+
+    return note;
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
+  @HttpCode(204)
+  async update(
+    @Param('id') id: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ): Promise<void> {
+    const note = await this.notesService.findOne(+id);
+    if (!note) {
+      throw new NotFoundException();
+    }
     updateNoteDto.updatedAt = updateNoteDto.updatedAt || new Date();
-    return this.notesService.update(+id, updateNoteDto);
+
+    await this.notesService.update(+id, updateNoteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notesService.remove(+id);
+  @HttpCode(204)
+  async remove(@Param('id') id: string): Promise<void> {
+    const note = await this.notesService.findOne(+id);
+    if (!note) {
+      throw new NotFoundException();
+    }
+
+    await this.notesService.remove(+id);
   }
 }
