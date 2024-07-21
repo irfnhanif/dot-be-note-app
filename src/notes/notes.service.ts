@@ -3,6 +3,7 @@ import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Note } from './models/note.model';
+import { where } from 'sequelize';
 
 @Injectable()
 export class NotesService {
@@ -22,8 +23,8 @@ export class NotesService {
     });
   }
 
-  async findAll(): Promise<Note[]> {
-    return this.noteModel.findAll();
+  async findByAuthorId(userId: number): Promise<Note[]> {
+    return this.noteModel.findAll({where: {authorId: userId}});
   }
 
   findOne(id: number): Promise<Note> {
